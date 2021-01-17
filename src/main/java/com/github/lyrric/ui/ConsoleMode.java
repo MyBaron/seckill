@@ -1,7 +1,6 @@
 package com.github.lyrric.ui;
 
 import com.github.lyrric.conf.Config;
-import com.github.lyrric.model.BusinessException;
 import com.github.lyrric.model.Member;
 import com.github.lyrric.model.VaccineList;
 import com.github.lyrric.service.HttpService;
@@ -10,17 +9,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Created on 2020-08-14.
@@ -39,10 +32,10 @@ public class ConsoleMode {
 
     public void start() throws IOException, ParseException, InterruptedException {
         Scanner sc = new Scanner(System.in);
-        log.info("请输入tk：");
-        Config.tk = sc.nextLine().trim();
-        log.info("请输入Cookie：");
-        Config.cookies = sc.nextLine().trim();
+        log.info("请输入sessionId：");
+        Config.cookie = sc.nextLine().trim();
+//        log.info("请输入Cookie：");
+//        Config.cookies = sc.nextLine().trim();
         log.info("获取接种人员......");
         List<Member> members = httpService.getMembers();
         for (int i = 0; i < members.size(); i++) {

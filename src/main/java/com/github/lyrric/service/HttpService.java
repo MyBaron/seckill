@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public class HttpService {
 
-    private String baseUrl = "https://miaomiao.scmttec.com";
+    private String baseUrl = "https://cloud.cn2030.com";
 
     private final Logger logger = LogManager.getLogger(HttpService.class);
 
@@ -65,13 +65,12 @@ public class HttpService {
      */
     public List<VaccineList> getVaccineList() throws BusinessException, IOException {
         hasAvailableConfig();
-        String path = baseUrl+"/seckill/seckill/list.do";
+        String path = baseUrl+"/sc/wx/HandlerSubscribe.ashx";
         Map<String, String> param = new HashMap<>();
-        //九价疫苗的code
-        param.put("offset", "0");
-        param.put("limit", "100");
-        //这个应该是成都的行政区划前四位
-        param.put("regionCode", Config.regionCode);
+        param.put("act", "CustomerProduct");
+        param.put("id", "1835");
+        param.put("lat", "22.27534");
+        param.put("lng", "114.16546");
         String json = get(path, param, null);
         return JSONObject.parseArray(json).toJavaList(VaccineList.class);
     }
@@ -100,7 +99,7 @@ public class HttpService {
     }
 
     private void hasAvailableConfig() throws BusinessException {
-        if(StringUtils.isEmpty(Config.cookies)){
+        if(StringUtils.isEmpty(Config.cookie)){
             throw new BusinessException("0", "请先配置cookie");
         }
     }
@@ -137,11 +136,11 @@ public class HttpService {
     private List<Header>getCommonHeader(){
         List<Header> headers = new ArrayList<>();
         headers.add(new BasicHeader("User-Agent", "Mozilla/5.0 (Linux; Android 5.1.1; SM-N960F Build/JLS36C; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/74.0.3729.136 Mobile Safari/537.36 MMWEBID/1042 MicroMessenger/7.0.15.1680(0x27000F34) Process/appbrand0 WeChat/arm32 NetType/WIFI Language/zh_CN ABI/arm32"));
-        headers.add(new BasicHeader("Referer", "https://servicewechat.com/wxff8cad2e9bf18719/2/page-frame.html"));
-        headers.add(new BasicHeader("tk", Config.tk));
+        headers.add(new BasicHeader("Referer", "https://servicewechat.com/wx2c7f0f3c30d99445/62/page-frame.html"));
+//        headers.add(new BasicHeader("tk", Config.tk));
         headers.add(new BasicHeader("Accept","application/json, text/plain, */*"));
-        headers.add(new BasicHeader("Host","miaomiao.scmttec.com"));
-        headers.add(new BasicHeader("Cookie",Config.cookies));
+        headers.add(new BasicHeader("Host","cloud.cn2030.com"));
+        headers.add(new BasicHeader("cookie",Config.cookie));
         return headers;
     }
 

@@ -15,11 +15,7 @@ public class ConfigDialog extends JDialog {
 
     JButton submit;
 
-    JButton parse;
-    JTextArea reqHeader;
-
-    JTextField cookie;
-    JTextField tk;
+    JTextField sessionId;
 
     Frame owner;
 
@@ -32,57 +28,31 @@ public class ConfigDialog extends JDialog {
 
     public void init(){
         this.setLayout(null);
-        this.setTitle("请输入抓包的请求头.....");
-        reqHeader = new JTextArea();
-        reqHeader.setBounds(20,10,400,200);
-        reqHeader.setText(Config.reqHeader);
+        this.setTitle("请输入Cookie");
 
-        JLabel tkLabel = new JLabel("tk：");
-        tkLabel.setBounds(10, 230, 60, 25);
+        JLabel tkLabel = new JLabel("Cookie：");
+        tkLabel.setBounds(10, 20, 60, 25);
         this.add(tkLabel);
-        tk = new JTextField();
-        tk.setBounds(70, 230, 350, 25);
-        this.add(tk);
-
-        JLabel cookieLabel = new JLabel("cookie：");
-        cookieLabel.setBounds(10, 270, 60, 25);
-        this.add(cookieLabel);
-        cookie = new JTextField();
-        cookie.setBounds(70, 270, 350, 25);
-        this.add(cookie);
+        sessionId = new JTextField();
+        sessionId.setBounds(70, 20, 350, 25);
+        this.add(sessionId);
 
 
         submit = new JButton("保存");
-        submit.setBounds(280, 320, 100, 40);
+        submit.setBounds(280, 100, 100, 40);
         submit.addActionListener(e -> {
-            if(cookie.getText().isEmpty() || tk.getText().isEmpty()){
-                JOptionPane.showMessageDialog(this, "请输入tk和cookie","提示", JOptionPane.PLAIN_MESSAGE);
+            if( sessionId.getText().isEmpty()){
+                JOptionPane.showMessageDialog(this, "请输入Cookie","提示", JOptionPane.PLAIN_MESSAGE);
             }else{
-                Config.reqHeader = reqHeader.getText();
-                Config.tk = tk.getText();
-                Config.cookies = cookie.getText();
+                Config.cookie = sessionId.getText();
                 success = true;
                 this.dispose();
             }
         });
 
-        parse = new JButton("解析");
-        parse.setBounds(20, 320, 100, 40);
-        parse.addActionListener(e -> {
-            String[] data = ParseUtil.parseHeader(reqHeader.getText());
-            if(data == null){
-                JOptionPane.showMessageDialog(this, "数据格式错误","提示", JOptionPane.PLAIN_MESSAGE);
-            }else{
-                tk.setText(data[0]);
-                cookie.setText(data[1]);
-            }
-        });
-        this.add(parse);
-
-        this.add(reqHeader);
         this.add(submit);
         this.setVisible(false);
-        this.setBounds(500, 500, 460, 400);
+        this.setBounds(500, 500, 460, 200);
         this.setResizable(false);
         setLocationRelativeTo(null);
     }

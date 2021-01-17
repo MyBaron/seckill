@@ -52,7 +52,7 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
         setLayout(null);
-        setTitle("Just For Fun");
+        setTitle("谷粒粒");
         setBounds(500 , 500, 680, 340);
         init();
         setLocationRelativeTo(null);
@@ -76,7 +76,7 @@ public class MainFrame extends JFrame {
                 setMemberBtn.setEnabled(true);
                 startBtn.setEnabled(true);
                 refreshBtn.setEnabled(true);
-                appendMsg("设置cookie成功");
+                appendMsg("设置Cookie成功");
             }
 
         });
@@ -129,7 +129,7 @@ public class MainFrame extends JFrame {
             }
         };
         provinceBox.addItemListener(itemListener);
-        cityBox = new JComboBox<>( ParseUtil.getChildren("直辖市").toArray(new Area[0]));
+        cityBox = new JComboBox<>( ParseUtil.getChildren("广东省").toArray(new Area[0]));
 
         provinceBox.setBounds(20, 275, 100, 20);
         cityBox.setBounds(130, 275, 80, 20);
@@ -188,8 +188,8 @@ public class MainFrame extends JFrame {
         }
     }
     private void start(){
-        if(StringUtils.isEmpty(Config.cookies)){
-            appendMsg("请配置cookie!!!");
+        if(StringUtils.isEmpty(Config.cookie)){
+            appendMsg("请配置Cookie!!!");
             return ;
         }
         if(vaccinesTable.getSelectedRow() < 0){

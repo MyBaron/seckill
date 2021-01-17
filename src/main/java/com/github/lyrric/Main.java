@@ -19,11 +19,11 @@ public class Main {
 
     public static void main(String[] args) throws IOException, ParseException, InterruptedException {
         logger.info("=================程序开始运行=================");
-        if(args.length > 0 && "-c".equals(args[0].toLowerCase())){
-            new ConsoleMode().start();
-        }else{
+//        if(args.length > 0 && "-c".equals(args[0].toLowerCase())){
+//            new ConsoleMode().start();
+//        }else{
             new MainFrame();
-        }
+//        }
         logger.info("=================程序运行结束=================");
     }
 
