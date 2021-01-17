@@ -18,6 +18,7 @@ import java.util.concurrent.Executors;
 /**
  * Created on 2020-08-14.
  * 控制台模式
+ *
  * @author wangxiaodong
  */
 public class ConsoleMode {
@@ -37,14 +38,11 @@ public class ConsoleMode {
 //        log.info("请输入Cookie：");
 //        Config.cookies = sc.nextLine().trim();
         log.info("获取接种人员......");
-        List<Member> members = httpService.getMembers();
-        for (int i = 0; i < members.size(); i++) {
-            log.info("{}-{}-{}", i, members.get(i).getName(), members.get(i).getIdCardNo());
-        }
+        Member members = httpService.getMembers();
+        log.info("{}-{}-{}", 0, members.getCname(), members.getIdcard());
         log.info("请输入接种人员序号：");
         int no = Integer.parseInt(sc.nextLine());
-        Config.memberId = members.get(no).getId();
-        Config.idCard = members.get(no).getIdCardNo();
+        Config.idCard = members.getCname();
 
         log.info("获取疫苗列表......");
         List<VaccineList> vaccineList = httpService.getVaccineList();
