@@ -1,5 +1,6 @@
 package com.github.lyrric.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.lyrric.conf.Config;
 import com.github.lyrric.model.*;
@@ -57,7 +58,8 @@ public class HttpService {
         //目前发现接口返回的st就是当前时间，后面可能会固定为一个加密参数
         long st = System.currentTimeMillis();
         Header header = new BasicHeader("ecc-hs", eccHs(seckillId, st));
-        return get(path, params, header);
+//        return get(path, params, header);
+        return null;
     }
 
     /**
@@ -66,16 +68,36 @@ public class HttpService {
      * @return
      * @throws BusinessException
      */
-    public List<VaccineList> getVaccineList() throws BusinessException, IOException {
+    public  JSONArray getVaccines(String id,String lat,String lng) throws BusinessException, IOException {
         hasAvailableConfig();
         String path = baseUrl + "/sc/wx/HandlerSubscribe.ashx";
         Map<String, String> param = new HashMap<>();
         param.put("act", "CustomerProduct");
-        param.put("id", "1835");
-        param.put("lat", "22.27534");
-        param.put("lng", "114.16546");
-        String json = get(path, param, null);
-        return JSONObject.parseArray(json).toJavaList(VaccineList.class);
+        param.put("id", id);
+        param.put("lat", lat);
+        param.put("lng", "lng");
+        String json = get(path, param, null).getString("list");
+        return JSONObject.parseArray(json);
+    }
+
+    /**
+     * 获取所有诊所列表
+     * @return
+     */
+    public JSONArray getClinics() throws IOException {
+        hasAvailableConfig();
+        String path = baseUrl + "/sc/wx/HandlerSubscribe.ashx";
+        Map<String, String> param = new HashMap<>();
+        param.put("act", "CustomerList");
+        param.put("city", "%5B%22%E5%B9%BF%E4%B8%9C%E7%9C%81%22%2C%22%E8%82%87%E5%BA%86%E5%B8%82%22%2C%22%22%5D");
+        param.put("lat", "23.18139");
+        param.put("lng", "113.48067");
+        param.put("id", "0");
+        param.put("cityCode", "441200");
+        param.put("product", "1");
+        String json = get(path, param, null).getString("list");
+        log.info("[获取诊所列表]返回信息:{}",json);
+        return JSONObject.parseArray(json);
     }
 
 
@@ -87,7 +109,7 @@ public class HttpService {
     public Member getMembers() throws IOException, BusinessException {
         //https://cloud.cn2030.com/sc/wx/HandlerSubscribe.ashx?act=User
         String path = baseUrl + "/sc/wx/HandlerSubscribe.ashx?act=User";
-        String json = get(path, null, null);
+        String json = get(path, null, null).getString("user");
         log.info("[获取接种人信息]返回信息：{}", json);
         return JSONObject.parseObject(json, Member.class);
     }
@@ -100,9 +122,10 @@ public class HttpService {
         String path = baseUrl + "/seckill/seckill/checkstock2.do";
         Map<String, String> params = new HashMap<>();
         params.put("id", vaccineId);
-        String json = get(path, params, null);
-        JSONObject jsonObject = JSONObject.parseObject(json);
-        return jsonObject.getJSONObject("data").getString("st");
+//        String json = get(path, params, null);
+//        JSONObject jsonObject = JSONObject.parseObject(json);
+//        return jsonObject.getJSONObject("data").getString("st");
+        return null;
     }
 
     private void hasAvailableConfig() throws BusinessException {
@@ -111,7 +134,7 @@ public class HttpService {
         }
     }
 
-    private String get(String path, Map<String, String> params, Header extHeader) throws IOException, BusinessException {
+    private JSONObject get(String path, Map<String, String> params, Header extHeader) throws IOException, BusinessException {
         if (params != null && params.size() != 0) {
             StringBuilder paramStr = new StringBuilder("?");
             params.forEach((key, value) -> {
@@ -136,7 +159,7 @@ public class HttpService {
         log.info("[http 请求]返回信息：{}", json);
         if (200 == (Integer) jsonObject.get("status")) {
             // TODO 还没改成统一
-            return jsonObject.getString("user");
+            return jsonObject;
         } else {
             throw new BusinessException(jsonObject.getString("code"), jsonObject.getString("msg"));
         }
@@ -167,13 +190,14 @@ public class HttpService {
      * @param orderId 订单ID
      */
     public List<SubDate> getSkSubDays(String vaccineId, String orderId) throws IOException, BusinessException {
-        String path = baseUrl + "/seckill/seckill/subscribeDays.do";
-        Map<String, String> params = new HashMap<>();
-        params.put("id", vaccineId);
-        params.put("sid", orderId);
-        String json = get(path, params, null);
-        logger.info("日期格式:{}", json);
-        return JSONObject.parseArray(json).toJavaList(SubDate.class);
+//        String path = baseUrl + "/seckill/seckill/subscribeDays.do";
+//        Map<String, String> params = new HashMap<>();
+//        params.put("id", vaccineId);
+//        params.put("sid", orderId);
+//        String json = get(path, params, null);
+//        logger.info("日期格式:{}", json);
+//        return JSONObject.parseArray(json).toJavaList(SubDate.class);
+        return null;
     }
 
     /**
@@ -187,14 +211,15 @@ public class HttpService {
      * @throws BusinessException
      */
     public List<SubDateTime> getSkSubDayTime(String vaccineId, String orderId, String day) throws IOException, BusinessException {
-        String path = baseUrl + "/seckill/seckill/dayTimes.do";
-        Map<String, String> params = new HashMap<>();
-        params.put("id", vaccineId);
-        params.put("sid", orderId);
-        params.put("day", day);
-        String json = get(path, params, null);
-        System.out.println("根据选择的日期，获取的时间格式" + json);
-        return JSONObject.parseArray(json).toJavaList(SubDateTime.class);
+//        String path = baseUrl + "/seckill/seckill/dayTimes.do";
+//        Map<String, String> params = new HashMap<>();
+//        params.put("id", vaccineId);
+//        params.put("sid", orderId);
+//        params.put("day", day);
+//        String json = get(path, params, null);
+//        System.out.println("根据选择的日期，获取的时间格式" + json);
+//        return JSONObject.parseArray(json).toJavaList(SubDateTime.class);
+        return null;
     }
 
     /**
@@ -208,13 +233,14 @@ public class HttpService {
      * @throws BusinessException
      */
     public void subDayTime(String vaccineId, String orderId, String day, String wid) throws IOException, BusinessException {
-        String path = baseUrl + "/seckill/seckill/submitDateTime.do";
-        Map<String, String> params = new HashMap<>();
-        params.put("id", vaccineId);
-        params.put("sid", orderId);
-        params.put("day", day);
-        params.put("wid", wid);
-        String json = get(path, params, null);
-        logger.info("提交接种时间，返回数据: {}", json);
+//        String path = baseUrl + "/seckill/seckill/submitDateTime.do";
+//        Map<String, String> params = new HashMap<>();
+//        params.put("id", vaccineId);
+//        params.put("sid", orderId);
+//        params.put("day", day);
+//        params.put("wid", wid);
+//        String json = get(path, params, null);
+//        logger.info("提交接种时间，返回数据: {}", json);
+        return;
     }
 }

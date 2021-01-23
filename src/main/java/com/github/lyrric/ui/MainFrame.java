@@ -4,7 +4,7 @@ import com.github.lyrric.conf.Config;
 import com.github.lyrric.model.Area;
 import com.github.lyrric.model.BusinessException;
 import com.github.lyrric.model.TableModel;
-import com.github.lyrric.model.VaccineList;
+import com.github.lyrric.model.Vaccine;
 import com.github.lyrric.service.SecKillService;
 import com.github.lyrric.util.ParseUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -29,7 +29,7 @@ public class MainFrame extends JFrame {
     /**
      * 疫苗列表
      */
-    private List<VaccineList> vaccines;
+    private List<Vaccine> vaccines;
 
     JButton startBtn;
 
@@ -74,13 +74,13 @@ public class MainFrame extends JFrame {
             dialog.setVisible(true);
             if(dialog.success()){
                 setMemberBtn.setEnabled(true);
-                startBtn.setEnabled(true);
-                refreshBtn.setEnabled(true);
+//                startBtn.setEnabled(true);
+//                refreshBtn.setEnabled(true);
                 appendMsg("设置Cookie成功");
             }
 
         });
-        setMemberBtn = new JButton("选择成员");
+        setMemberBtn = new JButton("获取成员信息");
         setMemberBtn.setEnabled(false);
         setMemberBtn.addActionListener((e)->{
             MemberDialog dialog = new MemberDialog(this);
@@ -89,10 +89,11 @@ public class MainFrame extends JFrame {
             dialog.setVisible(true);
             if(dialog.success()){
                 appendMsg("已设置成员：" + Config.memberName);
+                refreshBtn.setEnabled(true);
             }
         });
 
-        refreshBtn = new JButton("刷新疫苗列表");
+        refreshBtn = new JButton("获取疫苗列表");
         refreshBtn.setEnabled(false);
         refreshBtn.addActionListener((e)->{
             refreshVaccines();
@@ -106,7 +107,7 @@ public class MainFrame extends JFrame {
         JScrollPane scroll = new JScrollPane(note);
         scroll.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-        String[] columnNames = { "id", "疫苗名称","医院名称","秒杀时间" };
+        String[] columnNames = { "id", "疫苗名称","医院名称","预约时间" ,"是否可以预约"};
         tableModel = new TableModel(new String[0][], columnNames);
         vaccinesTable = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(vaccinesTable);
@@ -167,6 +168,7 @@ public class MainFrame extends JFrame {
 
     private void refreshVaccines(){
         try {
+            //获取疫苗
             vaccines = service.getVaccines();
             //清除表格数据
             //通知模型更新
@@ -174,10 +176,9 @@ public class MainFrame extends JFrame {
             ((DefaultTableModel)vaccinesTable.getModel()).fireTableDataChanged();
             vaccinesTable.updateUI();//刷新表
             if(vaccines != null && !vaccines.isEmpty()){
-                for (VaccineList t : vaccines) {
-                    String[] item = { t.getId().toString(), t.getVaccineName(),t.getName() ,t.getStartTime()};
+                for (Vaccine t : vaccines) {
+                    String[] item = { t.getId().toString(), t.getVaccineName(),t.getCname() ,t.getOrderTime(),t.isEnableOrder()?"是":"否"};
                     tableModel.addRow(item);
-
                 }
             }
         } catch (IOException e) {
@@ -199,7 +200,8 @@ public class MainFrame extends JFrame {
 
         int selectedRow = vaccinesTable.getSelectedRow();
         Integer id = vaccines.get(selectedRow).getId();
-        String startTime = vaccines.get(selectedRow).getStartTime();
+//        String startTime = vaccines.get(selectedRow).getStartTime();
+        String startTime = null;
         new Thread(()->{
             try {
                 setCookieBtn.setEnabled(false);
