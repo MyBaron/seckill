@@ -17,6 +17,10 @@ public class Vaccine {
      */
     private Integer id;
     /**
+     * 诊所 id
+     */
+    private Integer clinicId;
+    /**
      * 医院名称
      */
     private String cname;

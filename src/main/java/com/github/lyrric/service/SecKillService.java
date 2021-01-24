@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.github.lyrric.conf.Config;
 import com.github.lyrric.model.BusinessException;
 import com.github.lyrric.model.Clinic;
+import com.github.lyrric.model.SubDate;
 import com.github.lyrric.model.Vaccine;
 import com.github.lyrric.ui.MainFrame;
 import org.apache.logging.log4j.LogManager;
@@ -158,6 +159,7 @@ public class SecKillService {
             JSONArray vaccinesJson = httpService.getVaccines(clinic.getId(), clinic.getLat(), clinic.getLng());
             List<Vaccine> collect = vaccinesJson.toJavaList(Vaccine.class).stream().map(k -> {
                 k.setCname(clinic.getCname());
+                k.setClinicId(clinic.getId());
                 return k;
             }).collect(Collectors.toList());
             total.addAll(collect);
@@ -177,5 +179,10 @@ public class SecKillService {
         return date.getTime();
     }
 
+
+    public List<SubDate> getSubDate(Integer pid, Integer id, String month) throws IOException {
+        JSONArray subscribeDate = httpService.getSubscribeDate(pid, id, month);
+        return subscribeDate.toJavaList(SubDate.class);
+    }
 
 }

@@ -68,12 +68,12 @@ public class HttpService {
      * @return
      * @throws BusinessException
      */
-    public  JSONArray getVaccines(String id,String lat,String lng) throws BusinessException, IOException {
+    public JSONArray getVaccines(Integer id, String lat, String lng) throws BusinessException, IOException {
         hasAvailableConfig();
         String path = baseUrl + "/sc/wx/HandlerSubscribe.ashx";
         Map<String, String> param = new HashMap<>();
         param.put("act", "CustomerProduct");
-        param.put("id", id);
+        param.put("id", id + "");
         param.put("lat", lat);
         param.put("lng", "lng");
         String json = get(path, param, null).getString("list");
@@ -82,6 +82,7 @@ public class HttpService {
 
     /**
      * 获取所有诊所列表
+     *
      * @return
      */
     public JSONArray getClinics() throws IOException {
@@ -96,7 +97,7 @@ public class HttpService {
         param.put("cityCode", "441200");
         param.put("product", "1");
         String json = get(path, param, null).getString("list");
-        log.info("[获取诊所列表]返回信息:{}",json);
+        log.info("[获取诊所列表]返回信息:{}", json);
         return JSONObject.parseArray(json);
     }
 
@@ -181,6 +182,24 @@ public class HttpService {
         final Integer memberId = Config.memberId;
         String md5 = DigestUtils.md5Hex(seckillId + st + memberId);
         return DigestUtils.md5Hex(md5 + salt);
+    }
+
+    /**
+     * 获取可以预定的时间
+     *
+     * @return
+     */
+    public JSONArray getSubscribeDate(Integer pid, Integer id, String month) throws IOException {
+        hasAvailableConfig();
+        String path = baseUrl + "/sc/wx/HandlerSubscribe.ashx";
+        Map<String, String> param = new HashMap<>();
+        param.put("act", "GetCustSubscribeDateAll");
+        param.put("pid", pid+"");
+        param.put("id", id+"");
+        param.put("month", month);
+        String json = get(path, param, null).getString("list");
+        log.info("[获取预定时间]返回信息:{}", json);
+        return JSONObject.parseArray(json);
     }
 
 
